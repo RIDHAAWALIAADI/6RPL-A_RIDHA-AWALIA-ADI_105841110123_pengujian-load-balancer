@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  app1:
+    build: ./app
+    container_name: kasir-app1
+    environment:
+      - SERVER_NAME=Kasir-App1
+      - PORT=3000
+      - LOAD_BALANCER_ALGO=Round Robin (Antrean Kasir Bergantian)
+      - LOAD_BALANCER_LAYER=Layer 7 (Aplikasi)
+    volumes:
+      - ./data:/usr/src/app/data
+    networks:
+      - app-network
+
+  app2:
+    build: ./app
+    container_name: kasir-app2
+    environment:
+      - SERVER_NAME=Kasir-App2
+      - PORT=3000
+      - LOAD_BALANCER_ALGO=Round Robin (Antrean Kasir Bergantian)
+      - LOAD_BALANCER_LAYER=Layer 7 (Aplikasi)
+    volumes:
+      - ./data:/usr/src/app/data
+    networks:
+      - app-network
+
+  app3:
+    build: ./app
+    container_name: kasir-app3
+    environment:
+      - SERVER_NAME=Kasir-App3
+      - PORT=3000
+      - LOAD_BALANCER_ALGO=Round Robin (Antrean Kasir Bergantian)
+      - LOAD_BALANCER_LAYER=Layer 7 (Aplikasi)
+    volumes:
+      - ./data:/usr/src/app/data
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: load-balancer-minimarket
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app1
+      - app2
+      - app3
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
